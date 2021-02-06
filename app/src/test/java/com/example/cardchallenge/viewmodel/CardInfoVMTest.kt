@@ -2,11 +2,8 @@ package com.example.cardchallenge.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.cardchallenge.MainCoroutineRule
+import com.example.cardchallenge.ServiceProvide
 import com.example.cardchallenge.getOrAwaitValue
-import com.example.data.CardRepoImp
-import com.example.domain.usecase.CardUseCase
-import com.example.remote.RemoteDataSource
-import com.example.remote.getApiService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.`is`
@@ -30,8 +27,7 @@ class CardInfoVMTest {
 
     @Before
     fun setUp() {
-        val repo = CardRepoImp(RemoteDataSource(getApiService()))
-        val cardUseCase = CardUseCase(repo)
+        val cardUseCase = ServiceProvide.provideCardUseCase()
         cardInfoVM = CardInfoVM(cardUseCase)
     }
 
@@ -39,7 +35,7 @@ class CardInfoVMTest {
     fun getCardInfo() = runBlocking {
         cardInfoVM.cardNumber.value = "45717360"
 
-        cardInfoVM.getCardInfo()
+        cardInfoVM.getCard()
         val card = cardInfoVM.cardInfo.getOrAwaitValue()
 
         println(card)

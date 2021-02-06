@@ -1,9 +1,8 @@
 package com.example.cardchallenge.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.lifecycle.*
+import com.example.cardchallenge.util.EspressoIdlingResource
 import com.example.domain.Result
 import com.example.domain.model.Card
 import com.example.domain.usecase.CardUseCase
@@ -19,16 +18,29 @@ class CardInfoVM(private val cardUseCase: CardUseCase) : ViewModel() {
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    fun getCardInfo() {
-        _loading.value = true
-        viewModelScope.launch {
-            val result = cardUseCase.getCardInfo(cardNumber.value!!)
-
-            if (result.status == Result.Status.SUCCESS && result.data != null) {
-                _cardInfo.postValue(result.data!!)
-            } else _cardInfo.value = null
+    fun getCard() {
+        EspressoIdlingResource.wrapEspressoIdlingResource {
             _loading.value = true
+            viewModelScope.launch {
+                val result = cardUseCase.getCardInfo(cardNumber.value!!)
+
+                if (result.status == Result.Status.SUCCESS && result.data != null) {
+                    _cardInfo.postValue(result.data!!)
+                } else {
+                    _cardInfo.value = null
+                    Log.e(this@CardInfoVM::class.simpleName, "${result.message}")
+                }
+                _loading.value = false
+
+            }
         }
     }
+}
 
+class CardInfoVMFactory(
+    private val useCase: CardUseCase
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return CardInfoVM(useCase) as T
+    }
 }

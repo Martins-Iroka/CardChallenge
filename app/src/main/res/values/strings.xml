@@ -4,7 +4,8 @@
     <string name="card">Card</string>
     <string name="card_brand">Card Brand - %s</string>
     <string name="card_type">Card Type - %s</string>
-    <string name="bank_s">Bank - %s</string>
+    <string name="bank">Bank - %s</string>
     <string name="country">Country - %s</string>
     <string name="get">Proceed</string>
+    <string name="no_data_view">Oops! No data linked to the card :(</string>
 </resources>
