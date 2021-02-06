@@ -6,4 +6,5 @@
     <string name="card_type">Card Type - %s</string>
     <string name="bank_s">Bank - %s</string>
     <string name="country">Country - %s</string>
+    <string name="get">Proceed</string>
 </resources>
